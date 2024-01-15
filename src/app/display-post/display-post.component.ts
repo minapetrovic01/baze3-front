@@ -9,9 +9,11 @@ import { Decision } from '../entities/decision';
 export class DisplayPostComponent implements OnInit {
 
 
+
   @Input() decision:Decision|null=null;
   criteriaString:string="";
   alternativesString:string="";
+  supportEnabled:boolean=true;
 
   constructor() { }
 
@@ -46,6 +48,20 @@ export class DisplayPostComponent implements OnInit {
       }
     }
     return criteriaString;
+  }
+
+  unSupport() {
+    if(this.decision && this.decision.owner){
+      this.decision.owner.support_number--;
+      this.supportEnabled=true;
+    }
+  }
+
+  support() { 
+    if(this.decision && this.decision.owner){
+      this.decision.owner.support_number++;
+      this.supportEnabled=true;
+    }
   }
 
 }

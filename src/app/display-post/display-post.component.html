@@ -4,16 +4,28 @@
     <mat-card-subtitle class="mat-card-subtitle">{{decision?.owner!.name+" "+decision?.owner?.surname+"
       ("+decision?.owner?.email+")"}}</mat-card-subtitle>
   </mat-card-header>
+  <mat-card-actions>
+    <button mat-button (click)="unSupport()" [disabled]="supportEnabled">
+      <mat-icon>thumb_up</mat-icon>
+    </button>
+    <button mat-button (click)="unSupport()" [disabled]="!supportEnabled">
+      <mat-icon>thumb_down</mat-icon>
+      <!-- <span>{{decision?.oppose_number}}</span> -->
+    </button>
+  </mat-card-actions>
   <mat-card-content class="mat-card-content">
     <p>
       {{decision?.description}}
     </p>
+    <p>
+      {{decision?.date}}
     <p>
       {{criteriaString}}
     </p>
     <p>
       {{alternativesString}}
     </p>
+
   </mat-card-content>
 
 </mat-card>
