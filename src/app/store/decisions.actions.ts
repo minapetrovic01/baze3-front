@@ -26,9 +26,31 @@ export const loadSearchedDecisionsSuccess = createAction(
     props<{ searchedDecisions: Decision[] }>()
 );
 
+export const loadCachedDecisions = createAction(
+    '[Decisions] Load Cached Decisions'
+);
+
+export const deleteCachedDecisions = createAction(
+    '[Decisions] Delete Cached Decisions'
+);
+
+export const deleteCachedDecisionsSuccess = createAction(
+    '[Decisions] Deleted Cached Decisions'
+);
+
+export const loadCachedDecisionsSuccess = createAction(
+    '[Decisions] Load Cached Decisions',
+    props<{ cachedDecisions: Decision[] }>()
+);
+
 export const createDecision = createAction(
     '[Decisions] Create Decision',
-    props<{ decision: DecisionDto,alternatives:AlternativeDto[], criterias:CriteriaDto[] }>()
+    props<{ decision: DecisionDto,alternatives:AlternativeDto[], criterias:CriteriaDto[], }>()
+);
+
+export const createDecisionPartial = createAction(
+    '[Decisions] Create Decision Partial',
+    props<{ decision: DecisionDto,alternatives:AlternativeDto[], criterias:CriteriaDto[], }>()
 );
 
 export const emptySearch = createAction(

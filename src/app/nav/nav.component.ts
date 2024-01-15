@@ -12,6 +12,7 @@ import { emptySearch } from '../store/decisions.actions';
 })
 export class NavComponent {
 
+
   constructor(private router:Router,private store:Store<AppState>) { }
 
   addNewDecision() {
@@ -27,7 +28,9 @@ export class NavComponent {
   goToProfile() {
     this.router.navigate(['/my-profile']);
   }
-
+  searchHistory() {
+    this.router.navigate(['/history-page']);
+  }
   signOut() {
    
     // this.mainPageGuard.setGuardStatus(false);

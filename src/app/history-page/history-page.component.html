@@ -1,0 +1,25 @@
+<app-nav></app-nav>
+<div>
+    <hr class="line">
+    <h1 class="headline">Search history</h1>
+    <hr class="line">
+    
+    <div class="label-container" *ngIf="cachedDecisions.length === 0">
+        <h2 class="headline">Your search history is empty.</h2>
+    </div>
+    <div class="my-decisions">
+       
+        <div *ngFor="let cachedDecision of cachedDecisions">
+           <app-display-post [decision]="cachedDecision"></app-display-post>
+        </div>
+    </div>
+    <!-- <mat-form-field>
+        <button mat-raised-button color="primary" class="btn" (click)="clearHistory()">ClearHistory</button>
+    </mat-form-field> -->
+    <hr class="line">
+    <div class="btn-container">
+        <button mat-raised-button color="primary" class="btn" (click)="clearHistory()">Clear History</button>
+    </div>
+
+   
+</div>

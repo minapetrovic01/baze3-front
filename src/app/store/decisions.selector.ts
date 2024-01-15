@@ -26,3 +26,16 @@ export const selectMyDecisions=createSelector(
     .filter(decision => decision !== undefined)
     .map(decision => <Decision>decision)
 );
+
+export const selectCacheDecisionsFeature=createSelector(
+    (state: AppState) => state.cachedDecisions,
+    (cachedDecisions) => cachedDecisions
+);
+
+export const selectCachedDecisions=createSelector(
+    selectCacheDecisionsFeature,
+    (state) => state.ids.map(id => state.entities[id])
+    .filter(decision => decision !== undefined)
+    .map(decision => <Decision>decision)
+);
+
