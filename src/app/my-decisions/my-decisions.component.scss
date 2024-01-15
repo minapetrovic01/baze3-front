@@ -1,0 +1,37 @@
+.my-decisions{
+    width: 90%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Three columns of equal width */
+    grid-template-rows: repeat(5, minmax(auto, max-content));
+    gap: 10px;
+    padding: 20px;
+    overflow-y: auto;
+    position: relative;
+}
+.headline{
+    font-size: 20px;
+    font-weight: bold;
+    color: #673AB7;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    line-height: 1.5;
+}
+.line{
+    width: 100%;
+    height: 1px;
+    background-color: #673AB7;
+    margin: 20px 0;
+}
+
+p{
+    font-size: 16px;
+    color: #673AB7;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    line-height: 1.5;
+}

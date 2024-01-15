@@ -1,0 +1,26 @@
+<app-nav></app-nav>
+<div>
+    <hr class="line">
+    <h1 class="headline">Search for decisions</h1>
+    <hr class="line">
+    <div class="searchArea">
+        <mat-form-field appearance="fill" class="field" color="primary">
+            <mat-label>Alternative name</mat-label>
+            <input matInput type="text" [(ngModel)]="searchAlternativeName" required="true"
+                #searchAlternativeNameInput="ngModel" />
+
+        </mat-form-field>
+        <button mat-icon-button class="example-icon" color="primary" (click)="search()">
+            <mat-icon>search</mat-icon>
+        </button>
+    </div>
+    <div class="decisions">
+        <div *ngFor="let searchedDecision of searchedDecisions">
+            <app-display-post [decision]="searchedDecision"></app-display-post>
+        </div>
+    </div>
+    <div *ngIf="searchedDecisions.length === 0">
+        <p>You have not searched for any decisions yet.</p>
+    </div>
+
+</div>

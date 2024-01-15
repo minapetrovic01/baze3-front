@@ -1,0 +1,16 @@
+<app-nav></app-nav>
+<div>
+    <hr class="line">
+    <h1 class="headline">My Decisions</h1>
+    <hr class="line">
+    
+    <div  class="my-decisions">
+        <div *ngIf="myDecisions.length === 0">
+            <p>You have not made any decisions yet.</p>
+        </div>
+        <div *ngFor="let myDdecision of myDecisions">
+           <app-display-post [decision]="myDdecision"></app-display-post>
+        </div>
+    </div>
+   
+</div>
