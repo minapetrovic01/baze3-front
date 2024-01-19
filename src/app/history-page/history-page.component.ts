@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { AppState } from '../app.state';
-import { selectMyDecisions } from '../store/decisions.selector';
+import { selectCachedDecisions, selectMyDecisions } from '../store/decisions.selector';
 import { Decision } from '../entities/decision';
 import { deleteCachedDecisions, loadCachedDecisions } from '../store/decisions.actions';
 
@@ -18,7 +18,7 @@ export class HistoryPageComponent implements OnInit {
   cachedDecisions:Decision[]=[];
 
   ngOnInit(): void {
-    this.store.select(selectMyDecisions).subscribe((cachedDecisions)=>{
+    this.store.select(selectCachedDecisions).subscribe((cachedDecisions)=>{
       this.cachedDecisions=cachedDecisions;
     });
     this.store.dispatch(loadCachedDecisions());

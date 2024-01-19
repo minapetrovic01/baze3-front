@@ -54,19 +54,13 @@ export class DisplayPostComponent implements OnInit {
   }
 
   unSupport() {
-    if(this.decision && this.decision.owner){
-      this.decision.owner.support_number--;
-      this.supportEnabled=true;
-    }
+    
     if(this.decision?.owner?.email)
       this.store.dispatch(unSupportUser({email:this.decision?.owner.email}));
   }
 
   support() { 
-    if(this.decision && this.decision.owner){
-      this.decision.owner.support_number++;
-      this.supportEnabled=true;
-    }
+  
     if(this.decision?.owner?.email)
       this.store.dispatch(supportUser({email:this.decision?.owner.email}));
 

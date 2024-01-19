@@ -46,7 +46,7 @@ export const loadCachedDecisionsSuccess = createAction(
 
 export const createDecision = createAction(
     '[Decisions] Create Decision',
-    props<{ decision: DecisionDto,alternatives:AlternativeDto[], criterias:CriteriaDto[], }>()
+    props<{ decision: DecisionDto,alternatives:AlternativeDto[], criterias:CriteriaDto[],tags:TagDto[] }>()
 );
 
 export const saveDraft = createAction(

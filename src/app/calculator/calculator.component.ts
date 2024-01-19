@@ -7,12 +7,16 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { TOPSIS } from './methods';
 import { Store } from '@ngrx/store';
 import { AppState } from '../app.state';
-import { createDecision } from '../store/decisions.actions';
+import { createDecision, discardDraft, saveDraft } from '../store/decisions.actions';
 import { Chart, ChartOptions, LabelItem } from 'chart.js';
 import { Router } from '@angular/router';
-import { selectIsAuth } from '../store/user.selectors';
+import { selectIsAuth, selectUserData } from '../store/user.selectors';
 import { selectUnfinishedDecision } from '../store/decisions.selector';
 import { TagDto } from '../entities/tag.dto';
+import { User } from '../entities/user';
+import { Tag } from '../entities/tag';
+import { Criteria } from '../entities/criteria';
+import { Alternative } from '../entities/alternative';
 
 @Component({
   selector: 'app-calculator',
@@ -34,6 +38,10 @@ export class CalculatorComponent implements OnInit {
   weights: number[] = [];
   tags:TagDto[]=[];
   draft: Decision|null=null;
+  tag1:string="";
+  tag2:string="";
+  tag3:string="";
+  owner:User|null=null;
 
   altcritFormGroup!: FormGroup;
   isGuest:boolean=false;
@@ -48,6 +56,9 @@ export class CalculatorComponent implements OnInit {
     this.altcritFormGroup = this._formBuilder.group({
       name: ['', Validators.required],
       description: ['', Validators.required],
+      tag1: ['', Validators.required],  
+      tag2: ['', Validators.required],
+      tag3: ['', Validators.required],
       alternativeNumber: ['', Validators.required],
       criteriaNumber: ['', Validators.required],
     });
@@ -56,9 +67,13 @@ export class CalculatorComponent implements OnInit {
         this.isGuest=true;
       }
     });
-
+    this.store.select(selectUserData).subscribe(user => {
+      if(user){
+        this.owner=user;
+      }
+    });
     this.store.select(selectUnfinishedDecision).subscribe(decision => {
-      if(decision){
+      if(decision!==null && decision!==undefined){
         this.draft=decision;
       }
     });
@@ -80,9 +95,9 @@ export class CalculatorComponent implements OnInit {
     this.criterionNumber = this.altcritFormGroup.value.criteriaNumber;
     this.resetAlternativesAndCriterias();
     if(this.draft?.tags){
-      this.draft.tags.forEach(element => {
-        this.tags.push(new TagDto(element.name));
-      });
+      this.altcritFormGroup.value.tag1=this.draft.tags[0].name;
+      this.altcritFormGroup.value.tag2=this.draft.tags[1].name;
+      this.altcritFormGroup.value.tag3=this.draft.tags[2].name;
     }
     
     if(this.draft?.alternatives){
@@ -110,11 +125,16 @@ export class CalculatorComponent implements OnInit {
     for (let i = 0; i < this.criterionNumber; i++) {
       this.criterias.push(new CriteriaDto("Criteria " + (i + 1), 0));
     }
+    this.tags.push(new TagDto(this.altcritFormGroup.value.tag1));
+    this.tags.push(new TagDto(this.altcritFormGroup.value.tag2));
+    this.tags.push(new TagDto(this.altcritFormGroup.value.tag3));
+
     this.matrix = Array.from({ length: this.alternativeNumber }, () => Array.from({ length: this.criterionNumber }, () => 0));
   }
   resetAlternativesAndCriterias() {
     this.alternatives = [];
     this.criterias = [];
+    this.tags=[];
   }
   doCalculations() {
     this.weights = this.criterias.map(c => c.weight);
@@ -146,7 +166,7 @@ export class CalculatorComponent implements OnInit {
 
   }
   saveDecisionAndDoCalculations() {
-    this.store.dispatch(createDecision({ decision: this.decision, alternatives: this.alternatives, criterias: this.criterias }));
+    this.store.dispatch(createDecision({ decision: this.decision, alternatives: this.alternatives, criterias: this.criterias,tags:this.tags }));
     this.router.navigate(['/my-decisions']);
   }
   generateRandomColors(n: number) {
@@ -161,11 +181,24 @@ export class CalculatorComponent implements OnInit {
   }
 
   discardDecision(){
-
+    this.store.dispatch(discardDraft({email:this.owner!.email}));
+    this.router.navigate(['/my-decisions']);
+    
   }
 
   saveAsDraft(){
-    
+    let tags:Tag[]=[new Tag(this.altcritFormGroup.value.tag1),new Tag(this.altcritFormGroup.value.tag2),new Tag(this.altcritFormGroup.value.tag3)];
+    let criterias1:Criteria[]=[];
+    for(let i=0;i<this.criterias.length;i++){
+      criterias1.push(new Criteria(0,this.criterias[i].name,this.criterias[i].weight,new Decision(0,"","",new Date(),[],[],[],this.owner!)));
+    }
+    let alternatives1:Alternative[]=[];
+    for(let i=0;i<this.alternatives.length;i++){
+      alternatives1.push(new Alternative(0,this.alternatives[i].name,this.alternatives[i].percentage,new Decision(0,"","",new Date(),[],[],[],this.owner!)));
+    }
+
+    let dft =new Decision(0,this.altcritFormGroup.value.name,this.altcritFormGroup.value.description,new Date(),alternatives1,criterias1,tags,this.owner!);
+    this.store.dispatch(saveDraft({decision:dft}));
   }
 
 }

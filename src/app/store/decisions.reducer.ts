@@ -25,6 +25,8 @@ export const initialCacheDecisionsState: CacheDecisionsState = adapterCacheDecis
 export const myDecisionsReducer=createReducer(
     initialMyDecisionsState,
     on(loadMyDecisionsSuccess, (state, { myDecisions }) => {
+        console.log(myDecisions);
+        console.log("minaa");
         return adapterDecisions.setAll(myDecisions, state);
     }),
 );

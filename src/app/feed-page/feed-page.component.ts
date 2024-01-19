@@ -13,7 +13,7 @@ import { loadSearchedDecisions } from '../store/decisions.actions';
 export class FeedPageComponent implements OnInit {
 
   searchedDecisions:Decision[]=[];
-  searchAlternativeName:string="";
+  tag:string="";
 
   constructor(private store:Store<AppState>) { }
 
@@ -24,7 +24,7 @@ export class FeedPageComponent implements OnInit {
   }
 
   search(){
-    this.store.dispatch(loadSearchedDecisions({search:this.searchAlternativeName}));
+    this.store.dispatch(loadSearchedDecisions({search:this.tag}));
   }
   
 }

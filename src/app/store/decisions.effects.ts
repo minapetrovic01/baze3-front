@@ -4,7 +4,7 @@ import { DecisionService } from "../decision/decision.service";
 import { AlternativeService } from "../alternative/alternative.service";
 import { CriteriaService } from "../criteria/criteria.service";
 import { createDecision, discardDraft, discardDraftSuccess, loadMyDecisions, loadMyDecisionsSuccess, loadSearchedDecisions, loadSearchedDecisionsSuccess, saveDraft, saveDraftSucess } from "./decisions.actions";
-import { EMPTY, exhaustMap, forkJoin, map, mergeMap, tap } from "rxjs";
+import { EMPTY, exhaustMap, forkJoin, map, mergeMap, switchMap, tap } from "rxjs";
 import { Router } from "@angular/router";
 
 
@@ -18,27 +18,40 @@ export class DecisionsEffects {
         private readonly router: Router,
         ) { }
 
+//load cachedDecisions treba da se uradi
 
-
+    // loadMyDecisions$ = createEffect(() => {
+    //     return this.actions$.pipe(
+    //         ofType(loadMyDecisions),
+    //         exhaustMap((action) => {
+    //             return this.decisionService.getMyDecisions().pipe(
+    //                 map((myDecisions) => {console.log(myDecisions.body);
+    //                     return loadMyDecisionsSuccess({ myDecisions: myDecisions.body })})
+    //             );
+    //         })
+    //     )
+    // }
+    // );
     loadMyDecisions$ = createEffect(() => {
         return this.actions$.pipe(
             ofType(loadMyDecisions),
-            mergeMap((action) => {
+            switchMap((action) => {
                 return this.decisionService.getMyDecisions().pipe(
-                    
-                    map((myDecisions) => loadMyDecisionsSuccess({ myDecisions: myDecisions.body }))
+                    map((myDecisions) => {
+                        console.log(myDecisions.body);
+                        return loadMyDecisionsSuccess({ myDecisions: myDecisions.body });
+                    })
                 );
             })
-        )
-    }
-    );
+        );
+    });
 
     loadSearchedDecisions$ = createEffect(() => {
         return this.actions$.pipe(
             ofType(loadSearchedDecisions),
-            mergeMap((action) => {
+            exhaustMap((action) => {
                 return this.decisionService.getSearchedDecisions(action.search).pipe(
-                    map((searchedDecisions) => loadSearchedDecisionsSuccess({ searchedDecisions: searchedDecisions.body }))
+                    map((searchedDecisions) => {console.log(searchedDecisions.body);return loadSearchedDecisionsSuccess({ searchedDecisions: searchedDecisions.body })}),
                 );
             })
         )
@@ -48,8 +61,8 @@ export class DecisionsEffects {
     createDecision$ = createEffect(() => {
         return this.actions$.pipe(
             ofType(createDecision),
-            mergeMap((action) => {
-                return this.decisionService.createDecision(action.decision).pipe(
+            exhaustMap((action) => {
+                return this.decisionService.createDecision(action.decision,action.tags).pipe(
                     mergeMap((decision) => {
                         const alternatives$ = this.alternativeService.createAlternatives(action.alternatives, decision.body.id);
                         const criterias$ = this.criteriaService.createCriterias(action.criterias, decision.body.id);

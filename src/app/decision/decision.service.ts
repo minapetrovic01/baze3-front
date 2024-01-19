@@ -24,13 +24,13 @@ export class DecisionService {
 
   getMyDecisions():Observable<HttpResponse<any>>{
     this.store.select(selectUserData).pipe(
-      filter((userData)=>!!userData),
-      map((userData)=>userData!.id)
-    ).subscribe((userId)=>{
-      this.userId=userId;
-    });
-;
-    return this.http.get(url+`/decision/owner/${this.userId}`,{observe:'response'});//mail
+          filter((userData)=>!!userData),
+          map((userData)=>userData!.email)
+        ).subscribe((email)=>{
+          this.userEmail=email;
+        });
+
+    return this.http.get(url+`/decision/owner/${this.userEmail}`,{observe:'response'});//mail
     
   }
   getSearchedDecisions(search:string):Observable<HttpResponse<any>>{
@@ -41,11 +41,11 @@ export class DecisionService {
   createDecision(decision:DecisionDto,tags:TagDto[]):Observable<HttpResponse<any>>{
     this.store.select(selectUserData).pipe(
       filter((userData)=>!!userData),
-      map((userData)=>userData!.id)
-    ).subscribe((userId)=>{
-      this.userId=userId;
+      map((userData)=>userData!.email)
+    ).subscribe((email)=>{
+      this.userEmail=email;
     });
-    return this.http.post(url+`/decision?userEmail=${this.userId}`,{decisionDto:decision,tags},{observe:'response'});
+    return this.http.post(url+`/decision?userEmail=${this.userEmail}`,{decisionDto:decision,tags},{observe:'response'});
   }
 
   // deleteDecision(id): Observable<HttpResponse<any>> {
