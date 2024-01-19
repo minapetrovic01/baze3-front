@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
 import { deleteUser, login, loginError, loginsuccess, logout, signUp } from "./user.actions";
-import { EMPTY, catchError, map, mergeMap, of, switchMap, tap, throwError } from "rxjs";
+import { EMPTY, catchError, exhaustMap, map, mergeMap, of, switchMap, tap, throwError } from "rxjs";
 import { Router } from "@angular/router";
 import { UserService } from "../user/user.service";
 import { JwtHelperService } from "@auth0/angular-jwt";
@@ -21,7 +21,7 @@ export class UserEffects {
       return this.actions$.pipe(
         ofType(deleteUser),
         mergeMap((action) => {
-          return this.userService.deleteUser(action.id).pipe(
+          return this.userService.deleteUser(action.email).pipe(
             switchMap((response) => {
               if (response.status == 200) {
                 return of(logout());
@@ -48,16 +48,16 @@ export class UserEffects {
   login$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(login),
-      mergeMap((action) => {
+      exhaustMap((action) => {
         return this.userService.signIn(action.email, action.password).pipe(
-          switchMap((response) => {
+          mergeMap((response) => {
             if (response.status == 201) {
-              const token = response.body['access_token'];
-              const decodedToken: number = this.jwtHelper.decodeToken(token).sub;
-              return this.userService.getUser(decodedToken,token).pipe(
-                map((user) => loginsuccess({ user: user.body, token })),
+              console.log(response)
+              return this.userService.getUser(response.body.email).pipe(
+                map((user) => loginsuccess({ user: user.body })),
                 tap(() => {
                   this.router.navigateByUrl("/feed");
+                  console.log("ovde");
                 })
               );
             } else {
@@ -76,38 +76,6 @@ export class UserEffects {
     )
   },
 );
-
-// login$ = createEffect(() => {
-//   return this.actions$.pipe(
-//     ofType(login),
-//     mergeMap((action) => {
-//       return this.userService.signIn(action.email, action.password).pipe(
-//         switchMap((response) => {
-//           if (response.status == 201) {
-//             const token = response.body['access_token'];
-//             const decodedToken: number = this.jwtHelper.decodeToken(token).sub;
-//             return this.userService.getProfile(token).pipe(
-//               map((user) => loginsuccess({ user: user.body, token })),
-//               tap(() => {
-//                 this.router.navigateByUrl("/feed");
-//               })
-//             );
-//           } else {
-//             return EMPTY;
-//           }
-//         }),
-//         catchError((error: any) => {
-//           if (error.status == 401) {
-//             return of(loginError({ message: "Invalid credentials" }));
-//           } else {
-//             return of(loginError({ message: "Something went wrong" })) ;
-//           }
-//         })
-//       );
-//     })
-//   )
-// },
-// );
 
  
   logout$ = createEffect(
@@ -129,10 +97,8 @@ export class UserEffects {
         return this.userService.signUp(action.user).pipe(
           switchMap((response) => {
             if (response.status == 201) {
-              const token = response.body['access_token'];
-              const decodedToken: number = this.jwtHelper.decodeToken(token).sub;
-              return this.userService.getUser(decodedToken,token).pipe(
-                map((user) => loginsuccess({ user: user.body, token })),
+              return this.userService.getUser(action.user.email).pipe(
+                map((user) => loginsuccess({ user: user.body})),
                 tap(() => {
                   this.router.navigateByUrl("/feed");
                 })

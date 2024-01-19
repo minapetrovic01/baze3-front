@@ -4,7 +4,6 @@ import { loginError, loginsuccess, logout, removeToken, setToken, setUser } from
 import { EntityState } from "@ngrx/entity";
 
 export interface AuthState {
-    token: string;
     user: User|null;
   }
 
@@ -13,16 +12,15 @@ export interface AuthState {
   }
   
   export const initialState: AuthState = {
-    token: "",
     user: null,
   };
 
   export const authReducer = createReducer(
     initialState,
-    on(setToken, (state, { token }): AuthState => ({ ...state, token })),
-    on(removeToken, (state): AuthState => ({ ...state, token: "" })),
+   // on(setToken, (state, { token }): AuthState => ({ ...state, token })),
+    //on(removeToken, (state): AuthState => ({ ...state, token: "" })),
     on(setUser, (state, { user }): AuthState => ({ ...state, user })),
-    on(loginsuccess, (state, { user, token }): AuthState => ({ ...state, user, token })),
-    on(loginError, (state, { message }): AuthState => ({ ...state, user: null, token: "" })),
-    on(logout, (state): AuthState => ({ ...state, user: null, token: "" }))
+    on(loginsuccess, (state, { user }): AuthState => ({ ...state, user })),
+    on(loginError, (state, { message }): AuthState => ({ ...state, user: null })),
+    on(logout, (state): AuthState => ({ ...state, user: null, }))
   );

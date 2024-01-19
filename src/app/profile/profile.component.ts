@@ -77,7 +77,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
 
   deleteProfile() {
-   this.store.dispatch(deleteUser({ id: this.profileToDisplay.id }));
+   this.store.dispatch(deleteUser({ email: this.profileToDisplay.email }));
    this.router.navigateByUrl('/sign-in');
   }
 

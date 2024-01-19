@@ -34,7 +34,7 @@ import { MyDecisionsComponent } from './my-decisions/my-decisions.component';
 import { HomePageComponent } from './home-page/home-page.component';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { JwtModule } from '@auth0/angular-jwt';
-import { AuthInterceptor } from './interceptor';
+// import { AuthInterceptor } from './interceptor';
 import { NavComponent } from './nav/nav.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { cachedDecisionsReducer, myDecisionsReducer, searchedDecisionsReducer } from './store/decisions.reducer';
@@ -99,7 +99,7 @@ import { HistoryPageComponent } from './history-page/history-page.component';
     })
   ],
   providers: [
-    {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}
+    // {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}
   ],
   bootstrap: [AppComponent]
 })

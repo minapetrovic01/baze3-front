@@ -18,89 +18,38 @@ export class UserService {
     userDto: UserDto
   ): Observable<HttpResponse<any>> {
     return this.http.post(
-      url + '/auth/signup',
+      url + '/user',
       { ...userDto },
       { observe: 'response' }
     );
   }
 
-  signIn(email: string, password: string): Observable<HttpResponse<any>> {
+  signIn(email: string, password: string): Observable<HttpResponse<any>> {///sta ovde
+    console.log('000000000000000000000000000000')
+    console.log(email);
+    console.log(password)
     return this.http.post(
-      url + '/auth/signin',
+      url + '/user/signIn',
       { email: email, password: password },
       { observe: 'response' }
     );
   }
 
-  auth(token: string): Observable<HttpResponse<any>> {
-    const headers = new HttpHeaders().set('Authorization', 'Bearer ' + token);
-    return this.http.get(url + '/auth/guardtest', {
-      headers: headers,
-      observe: 'response',
-    });
+  
+  
+
+  getUser(email: string): Observable<HttpResponse<any>> {
+    //const headers = new HttpHeaders().set('Authorization', 'Bearer ' + token);
+    return this.http.get(url + '/user/' + email, { observe: 'response' });
   }
 
-  getUser(id: number,token:string): Observable<HttpResponse<any>> {
-    const headers = new HttpHeaders().set('Authorization', 'Bearer ' + token);
-    return this.http.get(url + '/user/' + id, { headers:headers, observe: 'response' });
-  }
-
-  deleteUser(id: number): Observable<HttpResponse<any>> {
-    return this.http.delete(url + '/user/' + id, { observe: 'response' });
+  deleteUser(email: string): Observable<HttpResponse<any>> {
+    return this.http.delete(url + '/user/' + email, { observe: 'response' });
   }
 
   getProfile(token:string): Observable<HttpResponse<any>> {
     const headers = new HttpHeaders().set('Authorization', 'Bearer ' + token);
     return this.http.get(url + '/user/profile', { headers:headers, observe: 'response' });
-  }
-
-  checkIfSubscribed(
-    subscriberId: number,
-    subscribesToId: number
-  ): Observable<HttpResponse<any>> {
-    return this.http.get(
-      url + `/user/checkIfSubscribed/${subscriberId}/${subscribesToId}`,
-      { observe: 'response' }
-    );
-  }
-
-  subscribeTo(subscriberId: number, subscribesToId: number) {
-    return this.http.post(
-      url + `/user/subscribe/${subscriberId}/${subscribesToId}`,
-      {},
-      { observe: 'response' }
-    );
-  }
-
-  unsubscribeFrom(subscriberId: number, subscribesToId: number) {
-    return this.http.delete(
-      url + `/user/unsubscribe/${subscriberId}/${subscribesToId}`,
-      { observe: 'response' }
-    );
-  }
-
-  getSubscribeesBooks(id: number): Observable<HttpResponse<any>> {
-    return this.http.get(url + `/user/subscribees/${id}/books`, {
-      observe: 'response',
-    });
-  }
-
-  getSubscribeesPapers(id: number): Observable<HttpResponse<any>> {
-    return this.http.get(url + `/user/subscribees/${id}/papers`, {
-      observe: 'response',
-    });
-  }
-
-  getSubscribeesProjects(id: number): Observable<HttpResponse<any>> {
-    return this.http.get(url + `/user/subscribees/${id}/projects`, {
-      observe: 'response',
-    });
-  }
-
-  getAllSubscribers(id: number): Observable<HttpResponse<any>> {
-    return this.http.get(url + `/user/subscribers/${id}`, {
-      observe: 'response',
-    });
   }
 }
 

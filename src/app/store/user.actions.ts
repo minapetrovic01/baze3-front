@@ -9,7 +9,7 @@ export const login = createAction(
 
   export const loginsuccess = createAction(
     "[Auth] Login Success",
-    props<{ user: User; token: string }>()
+    props<{ user: User; }>()
   );
   
   export const loginError = createAction(
@@ -38,7 +38,7 @@ export const login = createAction(
 
   export const deleteUser = createAction(
     "[Auth] Delete User",
-    props<{ id: number }>()
+    props<{ email: string }>()
   );
 
   
