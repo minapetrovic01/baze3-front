@@ -1,4 +1,14 @@
 <app-nav></app-nav>
+<div class="control-buttons">
+  <button mat-raised-button color="primary" class="btn-ctrl" style="float: left" type="button" 
+    (click)="saveAsDraft()">
+    Save as Draft
+  </button>
+  <button mat-raised-button color="primary" class="btn-ctrl" style="float: right" type="button" 
+    (click)="discardDecision()">
+    Discard 
+  </button>
+</div>
 <div class="container">
   <div class="main-div">
     <mat-stepper orientation="vertical" [linear]="true" #stepper>

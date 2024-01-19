@@ -3,8 +3,9 @@ import { Actions, createEffect, ofType } from "@ngrx/effects";
 import { DecisionService } from "../decision/decision.service";
 import { AlternativeService } from "../alternative/alternative.service";
 import { CriteriaService } from "../criteria/criteria.service";
-import { createDecision, loadMyDecisions, loadMyDecisionsSuccess, loadSearchedDecisions, loadSearchedDecisionsSuccess } from "./decisions.actions";
-import { forkJoin, map, mergeMap } from "rxjs";
+import { createDecision, discardDraft, discardDraftSuccess, loadMyDecisions, loadMyDecisionsSuccess, loadSearchedDecisions, loadSearchedDecisionsSuccess, saveDraft, saveDraftSucess } from "./decisions.actions";
+import { EMPTY, exhaustMap, forkJoin, map, mergeMap, tap } from "rxjs";
+import { Router } from "@angular/router";
 
 
 @Injectable()
@@ -13,7 +14,11 @@ export class DecisionsEffects {
     constructor(private readonly actions$: Actions,
         private decisionService: DecisionService,
         private alternativeService: AlternativeService,
-        private criteriaService: CriteriaService) { }
+        private criteriaService: CriteriaService,
+        private readonly router: Router,
+        ) { }
+
+
 
     loadMyDecisions$ = createEffect(() => {
         return this.actions$.pipe(
@@ -55,7 +60,41 @@ export class DecisionsEffects {
                 )
             })
         )
-    })
+    });
+
+    createDraft$ = createEffect(() => {
+        return this.actions$.pipe(
+            ofType(saveDraft),
+            exhaustMap((action) => {
+                return this.decisionService.createDraft(action.decision).pipe(
+                    mergeMap((response) => {
+                        if (response.status == 201) {
+                            console.log(response)
+                            return this.decisionService.getDraft().pipe(
+                              map((dec) => saveDraftSucess({ decision: dec.body })),
+                              tap(() => {
+                                this.router.navigateByUrl("/feed");
+                              })
+                            );
+                          } else {
+                            return EMPTY;
+                          }
+                    })
+                )
+            })
+        )
+    });
+
+    discardDraft$ = createEffect(() => {
+          return this.actions$.pipe(
+            ofType(discardDraft),
+            map((user) => discardDraftSuccess()),
+            tap(() => {
+              this.router.navigateByUrl("/calculator");
+            })
+          );
+        },
+      );
 }
 
 

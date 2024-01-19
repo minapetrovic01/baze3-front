@@ -5,6 +5,7 @@ import { Criteria } from "../entities/criteria";
 import { DecisionDto } from "../entities/decision.dto";
 import { AlternativeDto } from "../entities/alternative.dto";
 import { CriteriaDto } from "../entities/criteria.dto";
+import { TagDto } from "../entities/tag.dto";
 
 
 export const loadMyDecisions = createAction(
@@ -47,6 +48,25 @@ export const createDecision = createAction(
     '[Decisions] Create Decision',
     props<{ decision: DecisionDto,alternatives:AlternativeDto[], criterias:CriteriaDto[], }>()
 );
+
+export const saveDraft = createAction(
+    '[Decisions] Create Draft Decision',
+    props<{ decision: Decision }>()
+)
+export const saveDraftSucess = createAction(
+    '[Decisions] Create Draft Success',
+    props<{ decision: Decision}>()
+)
+export const discardDraft = createAction(
+    '[Decisions] Discard Draft Decision',
+    props<{ email: string }>()
+)
+export const discardDraftSuccess = createAction(
+    '[Decisions] Discard Draft Success',
+)
+
+
+
 
 export const createDecisionPartial = createAction(
     '[Decisions] Create Decision Partial',

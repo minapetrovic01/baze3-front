@@ -1,6 +1,7 @@
-import { createSelector } from "@ngrx/store";
+import { createFeatureSelector, createSelector } from "@ngrx/store";
 import { AppState } from "../app.state";
 import { Decision } from "../entities/decision";
+import { UnfinishedDecisionState } from "./decisions.reducer";
 
 
 export const selectSearchedDecisionsFeature=createSelector(
@@ -39,3 +40,9 @@ export const selectCachedDecisions=createSelector(
     .map(decision => <Decision>decision)
 );
 
+export const unfinishedDecisionFeature = createFeatureSelector<UnfinishedDecisionState>("decision");
+
+export const selectUnfinishedDecision = createSelector(
+    unfinishedDecisionFeature,
+    (state) => state.decision
+);

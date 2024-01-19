@@ -71,3 +71,15 @@
     color: #3f3c99;
   }
   
+
+  .control-buttons{
+    display: flex;
+    flex-direction:row ;
+    justify-content: center;
+    padding-top: 20px;
+  }
+
+  .btn-ctrl{
+    margin: 20px;
+    width:30%
+  }

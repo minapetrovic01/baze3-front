@@ -41,4 +41,18 @@ export const login = createAction(
     props<{ email: string }>()
   );
 
-  
+  export const supportUser = createAction(
+    "[Auth] Support User",
+    props<{ email: string }>()
+  );
+export const unSupportUser = createAction(
+  "[Auth] UnSupport",
+  props<{ email: string }>()
+);
+export const supportUserSuccess = createAction(
+  "[Auth] Support User scs",
+);
+export const supportUserFailure = createAction(
+"[Auth] support failure",
+props<{ errorMessage: string }>()
+);

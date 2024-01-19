@@ -6,6 +6,10 @@ import { Observable, filter, map } from 'rxjs';
 import { AppState } from '../app.state';
 import { selectUserData } from '../store/user.selectors';
 import { DecisionDto } from '../entities/decision.dto';
+import { AlternativeDto } from '../entities/alternative.dto';
+import { CriteriaDto } from '../entities/criteria.dto';
+import { TagDto } from '../entities/tag.dto';
+import { Decision } from '../entities/decision';
 
 @Injectable({
   providedIn: 'root'
@@ -13,6 +17,7 @@ import { DecisionDto } from '../entities/decision.dto';
 export class DecisionService {
   
   userId:number=0;
+  userEmail:string="";
 
 
   constructor(private http: HttpClient, private store:Store<AppState>) { }
@@ -25,21 +30,57 @@ export class DecisionService {
       this.userId=userId;
     });
 ;
-    return this.http.get(url+`/decision/owner/${this.userId}`,{observe:'response'});
+    return this.http.get(url+`/decision/owner/${this.userId}`,{observe:'response'});//mail
     
   }
   getSearchedDecisions(search:string):Observable<HttpResponse<any>>{
-    return this.http.get(url+'/decision/alternativeName/'+search,{observe:'response'});
+    return this.http.get(url+'/decision/tagName/'+search,{observe:'response'});
     
   }
 
-  createDecision(decision:DecisionDto):Observable<HttpResponse<any>>{
+  createDecision(decision:DecisionDto,tags:TagDto[]):Observable<HttpResponse<any>>{
     this.store.select(selectUserData).pipe(
       filter((userData)=>!!userData),
       map((userData)=>userData!.id)
     ).subscribe((userId)=>{
       this.userId=userId;
     });
-    return this.http.post(url+`/decision?userId=${this.userId}`,decision,{observe:'response'});
+    return this.http.post(url+`/decision?userEmail=${this.userId}`,{decisionDto:decision,tags},{observe:'response'});
   }
+
+  // deleteDecision(id): Observable<HttpResponse<any>> {
+  //   let userId: string;
+  
+  //   this.store.select(selectUserData).pipe(
+  //     filter((userData)=>!!userData),
+  //     map((userData)=>userData!.email)
+  //   ).subscribe((email)=>{
+  //     this.userEmail=email;
+  //   });
+  
+  //   return this.http.delete(`${url}/decision/${decisionId}?userId=${userId}`, { observe: 'response' });
+  // }
+
+  createDraft(decision:Decision ):Observable<HttpResponse<any>>{
+    this.store.select(selectUserData).pipe(
+      filter((userData)=>!!userData),
+      map((userData)=>userData!.email)
+    ).subscribe((email)=>{
+      this.userEmail=email;
+    });
+    return this.http.post(url+`/decision/unfinished?email=${this.userEmail}`,decision,{observe:'response'});
+  }
+  getDraft():Observable<HttpResponse<any>>{
+    return this.http.get(url+`/decision/unfinished?email=${this.userEmail}`,{observe:'response'});
+  }
+  deleteDraft():Observable<HttpResponse<any>>{
+    this.store.select(selectUserData).pipe(
+      filter((userData)=>!!userData),
+      map((userData)=>userData!.email)
+    ).subscribe((email)=>{
+      this.userEmail=email;
+    });
+    return this.http.delete(url+`/decision/unfinished?email=${this.userEmail}`,{observe:'response'});
+  }
+
 }

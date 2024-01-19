@@ -25,9 +25,6 @@ export class UserService {
   }
 
   signIn(email: string, password: string): Observable<HttpResponse<any>> {///sta ovde
-    console.log('000000000000000000000000000000')
-    console.log(email);
-    console.log(password)
     return this.http.post(
       url + '/user/signIn',
       { email: email, password: password },
@@ -35,11 +32,8 @@ export class UserService {
     );
   }
 
-  
-  
 
   getUser(email: string): Observable<HttpResponse<any>> {
-    //const headers = new HttpHeaders().set('Authorization', 'Bearer ' + token);
     return this.http.get(url + '/user/' + email, { observe: 'response' });
   }
 
@@ -47,9 +41,13 @@ export class UserService {
     return this.http.delete(url + '/user/' + email, { observe: 'response' });
   }
 
-  getProfile(token:string): Observable<HttpResponse<any>> {
-    const headers = new HttpHeaders().set('Authorization', 'Bearer ' + token);
-    return this.http.get(url + '/user/profile', { headers:headers, observe: 'response' });
+
+  supportUser(email: string): Observable<HttpResponse<any>> {
+    return this.http.post(url + '/user/supports/' + email,{} ,{ observe: 'response' });
+  }
+
+  unSupportUser(email: string): Observable<HttpResponse<any>> {
+    return this.http.post(url + '/user/supports/down/' + email,{} ,{ observe: 'response' });
   }
 }
 

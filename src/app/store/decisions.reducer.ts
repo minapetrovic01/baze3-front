@@ -1,7 +1,7 @@
 import { EntityState, createEntityAdapter } from "@ngrx/entity"
 import { Decision } from "../entities/decision";
 import { createReducer, on } from "@ngrx/store";
-import { loadMyDecisions, loadMyDecisionsSuccess, loadSearchedDecisionsSuccess,loadCachedDecisionsSuccess } from "./decisions.actions";
+import { loadMyDecisions, loadMyDecisionsSuccess, loadSearchedDecisionsSuccess,loadCachedDecisionsSuccess, saveDraftSucess, discardDraft, discardDraftSuccess } from "./decisions.actions";
 
 
 export interface DecisionsState extends EntityState<Decision> {
@@ -49,3 +49,18 @@ export const emptySearchReducer=createReducer(
         return adapterDecisions.removeAll(state);
     }),
 );
+
+
+export interface UnfinishedDecisionState {
+    decision: Decision|null;
+  }
+
+  export const initialState: UnfinishedDecisionState = {
+    decision: null,
+  };
+
+  export const unfinishedDecisionReducer = createReducer(
+    initialState,
+    on(saveDraftSucess, (state, { decision }): UnfinishedDecisionState => ({ ...state, decision })),
+    on(discardDraftSuccess, (state): UnfinishedDecisionState => ({ ...state, decision: null })),
+  );

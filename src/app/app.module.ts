@@ -37,7 +37,7 @@ import { JwtModule } from '@auth0/angular-jwt';
 // import { AuthInterceptor } from './interceptor';
 import { NavComponent } from './nav/nav.component';
 import { ReactiveFormsModule } from '@angular/forms';
-import { cachedDecisionsReducer, myDecisionsReducer, searchedDecisionsReducer } from './store/decisions.reducer';
+import { cachedDecisionsReducer, myDecisionsReducer, searchedDecisionsReducer, unfinishedDecisionReducer } from './store/decisions.reducer';
 import { DecisionsEffects } from './store/decisions.effects';
 import {MatGridListModule} from '@angular/material/grid-list';
 import {NgChartsModule} from 'ng2-charts';
@@ -64,7 +64,7 @@ import { HistoryPageComponent } from './history-page/history-page.component';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    StoreModule.forRoot<AppState>({auth:authReducer, myDecisions:myDecisionsReducer, searchedDecisions:searchedDecisionsReducer, cachedDecisions: cachedDecisionsReducer}),
+    StoreModule.forRoot<AppState>({auth:authReducer, myDecisions:myDecisionsReducer, searchedDecisions:searchedDecisionsReducer, cachedDecisions: cachedDecisionsReducer, unfinishedDecision:unfinishedDecisionReducer}),
     StoreDevtoolsModule.instrument({
       maxAge: 25, // Retains last 25 states
     }),

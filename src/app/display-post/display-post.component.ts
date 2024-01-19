@@ -1,5 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Decision } from '../entities/decision';
+import { Store } from '@ngrx/store';
+import { AuthState, UsersState } from '../store/user.reducer';
+import {  supportUser, unSupportUser } from '../store/user.actions';
 
 @Component({
   selector: 'app-display-post',
@@ -15,7 +18,7 @@ export class DisplayPostComponent implements OnInit {
   alternativesString:string="";
   supportEnabled:boolean=true;
 
-  constructor() { }
+  constructor( private store: Store<AuthState>) { }
 
   ngOnInit(): void {
     if(this.decision){
@@ -55,6 +58,8 @@ export class DisplayPostComponent implements OnInit {
       this.decision.owner.support_number--;
       this.supportEnabled=true;
     }
+    if(this.decision?.owner?.email)
+      this.store.dispatch(unSupportUser({email:this.decision?.owner.email}));
   }
 
   support() { 
@@ -62,6 +67,10 @@ export class DisplayPostComponent implements OnInit {
       this.decision.owner.support_number++;
       this.supportEnabled=true;
     }
+    if(this.decision?.owner?.email)
+      this.store.dispatch(supportUser({email:this.decision?.owner.email}));
+
+    
   }
 
 }

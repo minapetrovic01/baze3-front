@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
-import { deleteUser, login, loginError, loginsuccess, logout, signUp } from "./user.actions";
+import { deleteUser, login, loginError, loginsuccess, logout, signUp, supportUser, supportUserFailure, supportUserSuccess } from "./user.actions";
 import { EMPTY, catchError, exhaustMap, map, mergeMap, of, switchMap, tap, throwError } from "rxjs";
 import { Router } from "@angular/router";
 import { UserService } from "../user/user.service";
@@ -42,6 +42,29 @@ export class UserEffects {
     },
   );
 
+  support$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(supportUser),
+      mergeMap((action) =>
+        this.userService.supportUser(action.email).pipe(
+          switchMap((response) => {
+            if (response.status === 200) {
+              // Handle success, maybe dispatch a success action
+              return of(supportUserSuccess());
+            } else {
+              // Handle failure, maybe dispatch a failure action
+              return of(supportUserFailure({ errorMessage: 'Support failed' }));
+            }
+          }),
+          catchError((error) => {
+            // Handle any errors during the HTTP request
+            console.error('Error supporting user:', error);
+            return of(supportUserFailure({ errorMessage: 'Something went wrong' }));
+          })
+        )
+      )
+    )
+  );
 
  
 

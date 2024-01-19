@@ -11,6 +11,8 @@ import { createDecision } from '../store/decisions.actions';
 import { Chart, ChartOptions, LabelItem } from 'chart.js';
 import { Router } from '@angular/router';
 import { selectIsAuth } from '../store/user.selectors';
+import { selectUnfinishedDecision } from '../store/decisions.selector';
+import { TagDto } from '../entities/tag.dto';
 
 @Component({
   selector: 'app-calculator',
@@ -21,6 +23,8 @@ export class CalculatorComponent implements OnInit {
 
   public chart: any = null;
 
+  
+
   decision: DecisionDto = new DecisionDto("", "");
   alternativeNumber: number = 0;
   criterionNumber: number = 0;
@@ -28,6 +32,8 @@ export class CalculatorComponent implements OnInit {
   criterias: CriteriaDto[] = [];
   matrix: number[][] = [];
   weights: number[] = [];
+  tags:TagDto[]=[];
+  draft: Decision|null=null;
 
   altcritFormGroup!: FormGroup;
   isGuest:boolean=false;
@@ -49,8 +55,47 @@ export class CalculatorComponent implements OnInit {
       if(!isAuth){
         this.isGuest=true;
       }
+    });
+
+    this.store.select(selectUnfinishedDecision).subscribe(decision => {
+      if(decision){
+        this.draft=decision;
+      }
+    });
+
+    if(this.draft!==null){
+      this.setParametersFromDraft();
     }
-    );
+
+  }
+
+  setParametersFromDraft(){
+    this.altcritFormGroup.value.name=this.draft?.name;
+    this.altcritFormGroup.value.description=this.draft?.description;
+    this.altcritFormGroup.value.alternativeNumber=this.draft?.alternatives.length;
+    this.altcritFormGroup.value.criteriaNumber=this.draft?.criterias.length;
+    this.decision = new DecisionDto(this.altcritFormGroup.value.name, this.altcritFormGroup.value.description);
+
+    this.alternativeNumber = this.altcritFormGroup.value.alternativeNumber;
+    this.criterionNumber = this.altcritFormGroup.value.criteriaNumber;
+    this.resetAlternativesAndCriterias();
+    if(this.draft?.tags){
+      this.draft.tags.forEach(element => {
+        this.tags.push(new TagDto(element.name));
+      });
+    }
+    
+    if(this.draft?.alternatives){
+      this.draft.alternatives.forEach(element => {
+        this.alternatives.push(new AlternativeDto(element.name, element.percentage));
+      });
+    }
+    if(this.draft?.criterias){
+      this.draft.criterias.forEach(element => {
+        this.criterias.push(new CriteriaDto(element.name, element.weight));
+      });
+    }
+    this.matrix = Array.from({ length: this.alternativeNumber }, () => Array.from({ length: this.criterionNumber }, () => 0));
 
   }
 
@@ -113,6 +158,14 @@ export class CalculatorComponent implements OnInit {
     }
 
     return colors;
+  }
+
+  discardDecision(){
+
+  }
+
+  saveAsDraft(){
+    
   }
 
 }

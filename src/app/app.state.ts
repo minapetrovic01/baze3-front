@@ -1,4 +1,4 @@
-import { MyDecisionsState, DecisionsState, CacheDecisionsState } from "./store/decisions.reducer";
+import { MyDecisionsState, DecisionsState, CacheDecisionsState, UnfinishedDecisionState } from "./store/decisions.reducer";
 import { AuthState } from "./store/user.reducer";
 
 export interface AppState{
@@ -6,4 +6,5 @@ export interface AppState{
     myDecisions: MyDecisionsState;
     searchedDecisions: DecisionsState;
     cachedDecisions: CacheDecisionsState;
+    unfinishedDecision: UnfinishedDecisionState;
 }
