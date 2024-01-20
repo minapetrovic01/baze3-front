@@ -4,7 +4,7 @@ import { DecisionService } from "../decision/decision.service";
 import { AlternativeService } from "../alternative/alternative.service";
 import { CriteriaService } from "../criteria/criteria.service";
 import { createDecision, deleteCachedDecisions, deleteCachedDecisionsSuccess, discardDraft, discardDraftSuccess, loadCachedDecisions, loadCachedDecisionsSuccess, loadMyDecisions, loadMyDecisionsSuccess, loadSearchedDecisions, loadSearchedDecisionsSuccess, saveDraft, saveDraftSucess } from "./decisions.actions";
-import { EMPTY, exhaustMap, forkJoin, map, mergeMap, switchMap, tap } from "rxjs";
+import { EMPTY, exhaustMap, forkJoin, map, mergeMap, switchMap, take, tap } from "rxjs";
 import { Router } from "@angular/router";
 
 
@@ -40,13 +40,35 @@ export class DecisionsEffects {
                 return this.decisionService.getCachedDecisions().pipe(
                     map((cachedDecisions) => {
                         console.log(cachedDecisions.body);
+                       
                         return loadCachedDecisionsSuccess({ cachedDecisions: cachedDecisions.body });
+                      
+                        
                     })
                 );
             })
         );
     });
 
+
+    // loadCachedDecisions$ = createEffect(() => {
+    //     return this.actions$.pipe(
+    //       ofType(loadCachedDecisions),
+    //       switchMap((action) => {
+    //         return this.decisionService.getCachedDecisions().pipe(
+    //           take(1),  // Take only the first emitted value and complete the observable
+    //           map((cachedDecisions) => {
+    //             console.log(cachedDecisions.body);
+    //             if (cachedDecisions.body !== null) {
+    //               return loadCachedDecisionsSuccess({ cachedDecisions: cachedDecisions.body });
+    //             }
+    //             // If data is null, you might choose to dispatch a different action or handle it accordingly.
+    //             return { type: 'NoOpAction' }; // Replace with your preferred action or an empty action
+    //           })
+    //         );
+    //       })
+    //     );
+    //   });
     deleteCachedDecisions$ = createEffect(() => {
         return this.actions$.pipe(
             ofType(deleteCachedDecisions),

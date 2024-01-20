@@ -39,6 +39,8 @@ export const searchedDecisionsReducer=createReducer(
 export const cachedDecisionsReducer=createReducer(
     initialCacheDecisionsState,
     on(loadCachedDecisionsSuccess, (state, { cachedDecisions }) => {
+        console.log(cachedDecisions);
+        console.log("ovde je u reduceru");
         return adapterCacheDecisions.setAll(cachedDecisions, state);
     }),
     on(deleteCachedDecisionsSuccess, (state) => {

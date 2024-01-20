@@ -18,7 +18,12 @@ export class HistoryPageComponent implements OnInit {
   cachedDecisions:Decision[]=[];
 
   ngOnInit(): void {
+    this.store.dispatch(loadCachedDecisions());
+
     this.store.select(selectCachedDecisions).subscribe((cachedDecisions)=>{
+      console.log(cachedDecisions);
+      console.log(cachedDecisions.length);
+      console.log("minaaaaaaaaaaaaa");
       this.cachedDecisions=cachedDecisions;
     });
     this.store.dispatch(loadCachedDecisions());
