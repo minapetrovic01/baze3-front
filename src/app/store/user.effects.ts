@@ -17,29 +17,29 @@ export class UserEffects {
     private userService: UserService,
     private jwtHelper: JwtHelperService) { }
 
-    delete$ = createEffect(() => {
-      return this.actions$.pipe(
-        ofType(deleteUser),
-        mergeMap((action) => {
-          return this.userService.deleteUser(action.email).pipe(
-            switchMap((response) => {
-              if (response.status == 200) {
-                return of(logout());
-              } else {
-                return EMPTY;
-              }
-            }),
-            catchError((error: any) => {
-              if (error.status == 401) {
-                return of(loginError({ message: "Invalid credentials" }));
-              } else {
-                return of(loginError({ message: "Something went wrong" })) ;
-              }
-            })
-          );
-        })
-      )
-    },
+  delete$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(deleteUser),
+      mergeMap((action) => {
+        return this.userService.deleteUser(action.email).pipe(
+          switchMap((response) => {
+            if (response.status == 200) {
+              return of(logout());
+            } else {
+              return EMPTY;
+            }
+          }),
+          catchError((error: any) => {
+            if (error.status == 401) {
+              return of(loginError({ message: "Invalid credentials" }));
+            } else {
+              return of(loginError({ message: "Something went wrong" }));
+            }
+          })
+        );
+      })
+    )
+  },
   );
 
   support$ = createEffect(() =>
@@ -49,15 +49,12 @@ export class UserEffects {
         this.userService.supportUser(action.email).pipe(
           switchMap((response) => {
             if (response.status === 200) {
-              // Handle success, maybe dispatch a success action
               return of(supportUserSuccess());
             } else {
-              // Handle failure, maybe dispatch a failure action
               return of(supportUserFailure({ errorMessage: 'Support failed' }));
             }
           }),
           catchError((error) => {
-            // Handle any errors during the HTTP request
             console.error('Error supporting user:', error);
             return of(supportUserFailure({ errorMessage: 'Something went wrong' }));
           })
@@ -65,8 +62,6 @@ export class UserEffects {
       )
     )
   );
-
- 
 
   login$ = createEffect(() => {
     return this.actions$.pipe(
@@ -89,16 +84,15 @@ export class UserEffects {
             if (error.status == 401) {
               return of(loginError({ message: "Invalid credentials" }));
             } else {
-              return of(loginError({ message: "Something went wrong" })) ;
+              return of(loginError({ message: "Something went wrong" }));
             }
           })
         );
       })
     )
   },
-);
+  );
 
- 
   logout$ = createEffect(
     () => {
       return this.actions$.pipe(
@@ -111,7 +105,7 @@ export class UserEffects {
     { dispatch: false }
   );
 
- signUp$ = createEffect(() => {
+  signUp$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(signUp),
       mergeMap((action) => {
@@ -119,7 +113,7 @@ export class UserEffects {
           switchMap((response) => {
             if (response.status == 201) {
               return this.userService.getUser(action.user.email).pipe(
-                map((user) => loginsuccess({ user: user.body})),
+                map((user) => loginsuccess({ user: user.body })),
                 tap(() => {
                   this.router.navigateByUrl("/feed");
                 })
@@ -132,14 +126,12 @@ export class UserEffects {
             if (error.status == 401) {
               return of(loginError({ message: "Invalid credentials" }));
             } else {
-              return of(loginError({ message: "Something went wrong" })) ;
+              return of(loginError({ message: "Something went wrong" }));
             }
           })
         );
       })
     )
   }
-);
-
-
+  );
 }

@@ -16,7 +16,7 @@ export class DecisionsEffects {
         private alternativeService: AlternativeService,
         private criteriaService: CriteriaService,
         private readonly router: Router,
-        ) { }
+    ) { }
 
 
     loadMyDecisions$ = createEffect(() => {
@@ -38,14 +38,12 @@ export class DecisionsEffects {
             exhaustMap((action) => {
                 return this.decisionService.getCachedDecisions().pipe(
                     map((cachedDecisions) => loadCachedDecisionsSuccess({ cachedDecisions: cachedDecisions.body })),
-                    catchError(() => EMPTY) // Handle errors gracefully, you can customize this part
+                    catchError(() => EMPTY) 
                 );
             })
         );
     });
 
-
-    
     deleteCachedDecisions$ = createEffect(() => {
         return this.actions$.pipe(
             ofType(deleteCachedDecisions),
@@ -65,7 +63,7 @@ export class DecisionsEffects {
             ofType(loadSearchedDecisions),
             exhaustMap((action) => {
                 return this.decisionService.getSearchedDecisions(action.search).pipe(
-                    map((searchedDecisions) => {return loadSearchedDecisionsSuccess({ searchedDecisions: searchedDecisions.body })}),
+                    map((searchedDecisions) => { return loadSearchedDecisionsSuccess({ searchedDecisions: searchedDecisions.body }) }),
                 );
             })
         )
@@ -76,7 +74,7 @@ export class DecisionsEffects {
         return this.actions$.pipe(
             ofType(createDecision),
             exhaustMap((action) => {
-                return this.decisionService.createDecision(action.decision,action.tags).pipe(
+                return this.decisionService.createDecision(action.decision, action.tags).pipe(
                     mergeMap((decision) => {
                         const alternatives$ = this.alternativeService.createAlternatives(action.alternatives, decision.body.id);
                         const criterias$ = this.criteriaService.createCriterias(action.criterias, decision.body.id);
@@ -97,14 +95,14 @@ export class DecisionsEffects {
                     mergeMap((response) => {
                         if (response.status == 201) {
                             return this.decisionService.getDraft().pipe(
-                              map((dec) => saveDraftSucess({ decision: dec.body })),
-                              tap(() => {
-                                this.router.navigateByUrl("/feed");
-                              })
+                                map((dec) => saveDraftSucess({ decision: dec.body })),
+                                tap(() => {
+                                    this.router.navigateByUrl("/feed");
+                                })
                             );
-                          } else {
+                        } else {
                             return EMPTY;
-                          }
+                        }
                     })
                 )
             })
@@ -112,22 +110,22 @@ export class DecisionsEffects {
     });
 
     discardDraft$ = createEffect(() => {
-          return this.actions$.pipe(
+        return this.actions$.pipe(
             ofType(discardDraft),
             switchMap((action) => {
                 return this.decisionService.deleteDraft().pipe(
                     map((draft) => {
                         return discardDraftSuccess();
-                    }),tap(() => {
+                    }), tap(() => {
                         this.router.navigateByUrl("/feed");
-                      })
+                    })
                 );
             })
-          );
-        },
-      );
+        );
+    },
+    );
 
-      loadDraft$ = createEffect(() => {
+    loadDraft$ = createEffect(() => {
         return this.actions$.pipe(
             ofType(loadDraft),
             switchMap((action) => {
@@ -142,18 +140,18 @@ export class DecisionsEffects {
 
     deleteDecision$ = createEffect(() => {
         return this.actions$.pipe(
-          ofType(deleteDecision),
-          switchMap((action) => {
-              return this.decisionService.deleteDecision(action.id).pipe(
-                  map((draft) => {
-                      return loadMyDecisions();
-                  }),tap(() => {
-                      this.router.navigateByUrl("/feed");
+            ofType(deleteDecision),
+            switchMap((action) => {
+                return this.decisionService.deleteDecision(action.id).pipe(
+                    map((draft) => {
+                        return loadMyDecisions();
+                    }), tap(() => {
+                        this.router.navigateByUrl("/feed");
                     })
-              );
-          })
+                );
+            })
         );
-      },
+    },
     );
 
 }

@@ -46,7 +46,7 @@ export const loadCachedDecisionsSuccess = createAction(
 
 export const createDecision = createAction(
     '[Decisions] Create Decision',
-    props<{ decision: DecisionDto,alternatives:AlternativeDto[], criterias:CriteriaDto[],tags:TagDto[] }>()
+    props<{ decision: DecisionDto, alternatives: AlternativeDto[], criterias: CriteriaDto[], tags: TagDto[] }>()
 );
 
 export const saveDraft = createAction(
@@ -55,7 +55,7 @@ export const saveDraft = createAction(
 )
 export const saveDraftSucess = createAction(
     '[Decisions] Create Draft Success',
-    props<{ decision: Decision}>()
+    props<{ decision: Decision }>()
 )
 export const discardDraft = createAction(
     '[Decisions] Discard Draft Decision',
@@ -71,25 +71,21 @@ export const loadDraft = createAction(
 )
 export const loadDraftSuccess = createAction(
     '[Decisions] Load Draft Success',
-    props<{ decision: Decision}>()
+    props<{ decision: Decision }>()
 )
 
 export const deleteDecision = createAction(
     '[Decisions] Delete Decisions',
-    props<{ id: number}>()
+    props<{ id: number }>()
 );
 
 export const deleteDecisionSuccess = createAction(
     '[Decisions] Deleted Decisions Sucsess'
 );
 
-
-
-
-
 export const createDecisionPartial = createAction(
     '[Decisions] Create Decision Partial',
-    props<{ decision: DecisionDto,alternatives:AlternativeDto[], criterias:CriteriaDto[], }>()
+    props<{ decision: DecisionDto, alternatives: AlternativeDto[], criterias: CriteriaDto[], }>()
 );
 
 export const emptySearch = createAction(

@@ -19,7 +19,7 @@
             <mat-label>Name</mat-label>
             <input [(ngModel)]="user.name" required="true" #nameInput="ngModel" matInput />
         </mat-form-field>
-        <mat-form-field appearance="fill" class="field"color="primary">
+        <mat-form-field appearance="fill" class="field" color="primary">
             <mat-label>Surname</mat-label>
             <input [(ngModel)]="user.surname" required="true" #surnameInput="ngModel" matInput />
         </mat-form-field>
@@ -36,8 +36,9 @@
                 Sign In
             </button>
             <button mat-raised-button color="primary" class="btn" (click)="onSignUp()"
-                [disabled]="!emailInput.valid || !passwordInput.valid || !usernameInput.valid||!jobInput.valid||!nameInput.valid||!surnameInput.valid">Sign Up</button>
-           
+                [disabled]="!emailInput.valid || !passwordInput.valid || !usernameInput.valid||!jobInput.valid||!nameInput.valid||!surnameInput.valid">Sign
+                Up</button>
+
         </div>
     </div>
 </div>

@@ -11,12 +11,9 @@ import { Store } from '@ngrx/store';
 })
 export class UserService {
 
-  constructor(private http: HttpClient, private store:Store<AppState>) { }
+  constructor(private http: HttpClient, private store: Store<AppState>) { }
 
-
-  signUp(
-    userDto: UserDto
-  ): Observable<HttpResponse<any>> {
+  signUp(userDto: UserDto): Observable<HttpResponse<any>> {
     return this.http.post(
       url + '/user',
       { ...userDto },
@@ -32,7 +29,6 @@ export class UserService {
     );
   }
 
-
   getUser(email: string): Observable<HttpResponse<any>> {
     return this.http.get(url + '/user/' + email, { observe: 'response' });
   }
@@ -41,13 +37,12 @@ export class UserService {
     return this.http.delete(url + '/user/' + email, { observe: 'response' });
   }
 
-
   supportUser(email: string): Observable<HttpResponse<any>> {
-    return this.http.post(url + '/user/supports/' + email,{} ,{ observe: 'response' });
+    return this.http.post(url + '/user/supports/' + email, {}, { observe: 'response' });
   }
 
   unSupportUser(email: string): Observable<HttpResponse<any>> {
-    return this.http.post(url + '/user/supports/down/' + email,{} ,{ observe: 'response' });
+    return this.http.post(url + '/user/supports/down/' + email, {}, { observe: 'response' });
   }
 }
 

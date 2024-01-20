@@ -6,8 +6,7 @@
     <div class="searchArea">
         <mat-form-field appearance="fill" class="field" color="primary">
             <mat-label>Tag name</mat-label>
-            <input matInput type="text" [(ngModel)]="tag" required="true"
-                #searchAlternativeNameInput="ngModel" />
+            <input matInput type="text" [(ngModel)]="tag" required="true" #searchAlternativeNameInput="ngModel" />
 
         </mat-form-field>
         <button mat-icon-button class="example-icon" color="primary" (click)="search()">
