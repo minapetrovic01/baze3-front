@@ -7,7 +7,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { TOPSIS } from './methods';
 import { Store } from '@ngrx/store';
 import { AppState } from '../app.state';
-import { createDecision, discardDraft, saveDraft } from '../store/decisions.actions';
+import { createDecision, discardDraft, loadCachedDecisions, loadDraft, saveDraft } from '../store/decisions.actions';
 import { Chart, ChartOptions, LabelItem } from 'chart.js';
 import { Router } from '@angular/router';
 import { selectIsAuth, selectUserData } from '../store/user.selectors';
@@ -75,11 +75,15 @@ export class CalculatorComponent implements OnInit {
     this.store.select(selectUnfinishedDecision).subscribe(decision => {
       if(decision!==null && decision!==undefined){
         this.draft=decision;
+        console.log(this.draft)
+        if(this.draft!==null){
+          this.setParametersFromDraft();
+        }
       }
     });
 
-    if(this.draft!==null){
-      this.setParametersFromDraft();
+    if(this.owner!==null){
+      this.store.dispatch(loadDraft({email:this.owner!.email}));
     }
 
   }

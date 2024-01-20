@@ -65,6 +65,16 @@ export const discardDraftSuccess = createAction(
     '[Decisions] Discard Draft Success',
 )
 
+export const loadDraft = createAction(
+    '[Decisions] Load Draft Decision',
+    props<{ email: string }>()
+)
+export const loadDraftSuccess = createAction(
+    '[Decisions] Load Draft Success',
+    props<{ decision: Decision}>()
+)
+
+
 
 
 

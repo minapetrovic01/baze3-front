@@ -3,7 +3,7 @@ import { Actions, createEffect, ofType } from "@ngrx/effects";
 import { DecisionService } from "../decision/decision.service";
 import { AlternativeService } from "../alternative/alternative.service";
 import { CriteriaService } from "../criteria/criteria.service";
-import { createDecision, deleteCachedDecisions, deleteCachedDecisionsSuccess, discardDraft, discardDraftSuccess, loadCachedDecisions, loadCachedDecisionsSuccess, loadMyDecisions, loadMyDecisionsSuccess, loadSearchedDecisions, loadSearchedDecisionsSuccess, saveDraft, saveDraftSucess } from "./decisions.actions";
+import { createDecision, deleteCachedDecisions, deleteCachedDecisionsSuccess, discardDraft, discardDraftSuccess, loadCachedDecisions, loadCachedDecisionsSuccess, loadDraft, loadDraftSuccess, loadMyDecisions, loadMyDecisionsSuccess, loadSearchedDecisions, loadSearchedDecisionsSuccess, saveDraft, saveDraftSucess } from "./decisions.actions";
 import { EMPTY, catchError, exhaustMap, forkJoin, map, mergeMap, switchMap, take, tap } from "rxjs";
 import { Router } from "@angular/router";
 
@@ -133,13 +133,34 @@ export class DecisionsEffects {
     discardDraft$ = createEffect(() => {
           return this.actions$.pipe(
             ofType(discardDraft),
-            map((user) => discardDraftSuccess()),
-            tap(() => {
-              this.router.navigateByUrl("/calculator");
+            switchMap((action) => {
+                return this.decisionService.deleteDraft().pipe(
+                    map((draft) => {
+                        console.log(draft.body);
+                        return discardDraftSuccess();
+                    }),tap(() => {
+                        this.router.navigateByUrl("/feed");
+                      })
+                );
             })
           );
         },
       );
+
+      loadDraft$ = createEffect(() => {
+        return this.actions$.pipe(
+            ofType(loadDraft),
+            switchMap((action) => {
+                return this.decisionService.getDraft().pipe(
+                    map((draft) => {
+                        console.log(draft.body);
+                        return loadDraftSuccess({ decision: draft.body });
+                    })
+                );
+            })
+        );
+    });
+
 }
 
 

@@ -90,10 +90,16 @@ export class DecisionService {
     ).subscribe((email)=>{
       this.userEmail=email;
     });
-    return this.http.post(url+`/decision/unfinished?email=${this.userEmail}`,decision,{observe:'response'});
+    return this.http.post(url+`/decision/unfinished/${this.userEmail}`,decision,{observe:'response'});
   }
   getDraft():Observable<HttpResponse<any>>{
-    return this.http.get(url+`/decision/unfinished?email=${this.userEmail}`,{observe:'response'});
+    this.store.select(selectUserData).pipe(
+      filter((userData)=>!!userData),
+      map((userData)=>userData!.email)
+    ).subscribe((email)=>{
+      this.userEmail=email;
+    });
+    return this.http.get(url+`/decision/unfinished/${this.userEmail}`,{observe:'response'});
   }
   deleteDraft():Observable<HttpResponse<any>>{
     this.store.select(selectUserData).pipe(
@@ -102,7 +108,7 @@ export class DecisionService {
     ).subscribe((email)=>{
       this.userEmail=email;
     });
-    return this.http.delete(url+`/decision/unfinished?email=${this.userEmail}`,{observe:'response'});
+    return this.http.delete(url+`/decision/unfinished/${this.userEmail}`,{observe:'response'});
   }
 
 }

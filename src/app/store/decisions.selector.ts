@@ -40,7 +40,7 @@ export const selectCachedDecisions=createSelector(
     .map(decision => <Decision>decision)
 );
 
-export const unfinishedDecisionFeature = createFeatureSelector<UnfinishedDecisionState>("decision");
+export const unfinishedDecisionFeature = createFeatureSelector<UnfinishedDecisionState>("unfinishedDecision");
 
 export const selectUnfinishedDecision = createSelector(
     unfinishedDecisionFeature,
