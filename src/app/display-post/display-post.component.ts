@@ -3,6 +3,7 @@ import { Decision } from '../entities/decision';
 import { Store } from '@ngrx/store';
 import { AuthState, UsersState } from '../store/user.reducer';
 import {  supportUser, unSupportUser } from '../store/user.actions';
+import { AppState } from '../app.state';
 
 @Component({
   selector: 'app-display-post',
@@ -17,14 +18,24 @@ export class DisplayPostComponent implements OnInit {
   criteriaString:string="";
   alternativesString:string="";
   supportEnabled:boolean=true;
+  isMine:boolean=false;
+  supportNumber:number=0;
 
-  constructor( private store: Store<AuthState>) { }
+  constructor( private store: Store<AppState>) { }
 
   ngOnInit(): void {
     if(this.decision){
       this.criteriaString=this.makeCriteriaString();
       this.alternativesString=this.makeAlternativesString();
     }
+    this.store.select((state)=>state.auth).subscribe((authState:AuthState)=>{
+      if(authState.user){
+        if(this.decision?.owner?.email===authState.user.email){
+          this.isMine=true;
+        }
+      }
+    });
+    this.supportNumber=this.decision?.owner?.supportNumber||0;
   }
 
   makeAlternativesString():string{
@@ -58,6 +69,7 @@ export class DisplayPostComponent implements OnInit {
       this.supportEnabled=!this.supportEnabled;
       this.store.dispatch(unSupportUser({email:this.decision?.owner.email}));
     }
+   this.supportNumber--;
   }
 
   support() { 
@@ -65,6 +77,7 @@ export class DisplayPostComponent implements OnInit {
       this.supportEnabled=!this.supportEnabled;
       this.store.dispatch(supportUser({email:this.decision?.owner.email}));
     }
+    this.supportNumber++;
   }
 
 }

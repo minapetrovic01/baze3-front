@@ -14,7 +14,7 @@ export class SignUpUserComponent implements OnInit, OnDestroy{
  
   hidePassword: boolean = true;
 
-  user:UserDto = new UserDto('','','','','','');
+  user:UserDto = new UserDto('','','','','','',0);
 
   constructor(private store: Store<AppState>,private router:Router) { }
 

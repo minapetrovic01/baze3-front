@@ -56,7 +56,13 @@ export class DecisionService {
 
 
   getSearchedDecisions(search:string):Observable<HttpResponse<any>>{
-    return this.http.get(url+'/decision/tagName/'+search,{observe:'response'});
+    this.store.select(selectUserData).pipe(
+      filter((userData)=>!!userData),
+      map((userData)=>userData!.email)
+    ).subscribe((email)=>{
+      this.userEmail=email;
+    });
+    return this.http.get(url+'/decision/tagName/'+search+`/${this.userEmail}`,{observe:'response'});
     
   }
 
