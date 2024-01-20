@@ -1,7 +1,7 @@
 import { EntityState, createEntityAdapter } from "@ngrx/entity"
 import { Decision } from "../entities/decision";
 import { createReducer, on } from "@ngrx/store";
-import { loadMyDecisions, loadMyDecisionsSuccess, loadSearchedDecisionsSuccess,loadCachedDecisionsSuccess, saveDraftSucess, discardDraft, discardDraftSuccess } from "./decisions.actions";
+import { loadMyDecisions, loadMyDecisionsSuccess, loadSearchedDecisionsSuccess,loadCachedDecisionsSuccess, saveDraftSucess, discardDraft, discardDraftSuccess, deleteCachedDecisionsSuccess } from "./decisions.actions";
 
 
 export interface DecisionsState extends EntityState<Decision> {
@@ -25,9 +25,7 @@ export const initialCacheDecisionsState: CacheDecisionsState = adapterCacheDecis
 export const myDecisionsReducer=createReducer(
     initialMyDecisionsState,
     on(loadMyDecisionsSuccess, (state, { myDecisions }) => {
-        console.log(myDecisions);
-        console.log("minaa");
-        return adapterDecisions.setAll(myDecisions, state);
+        return adapterMyDecisions.setAll(myDecisions, state);
     }),
 );
 
@@ -41,7 +39,10 @@ export const searchedDecisionsReducer=createReducer(
 export const cachedDecisionsReducer=createReducer(
     initialCacheDecisionsState,
     on(loadCachedDecisionsSuccess, (state, { cachedDecisions }) => {
-        return adapterDecisions.setAll(cachedDecisions, state);
+        return adapterCacheDecisions.setAll(cachedDecisions, state);
+    }),
+    on(deleteCachedDecisionsSuccess, (state) => {
+        return adapterCacheDecisions.removeAll(state);
     }),
 );
 

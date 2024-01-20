@@ -33,6 +33,28 @@ export class DecisionService {
     return this.http.get(url+`/decision/owner/${this.userEmail}`,{observe:'response'});//mail
     
   }
+
+  getCachedDecisions():Observable<HttpResponse<any>>{
+    this.store.select(selectUserData).pipe(
+          filter((userData)=>!!userData),
+          map((userData)=>userData!.email)
+        ).subscribe((email)=>{
+          this.userEmail=email;
+        });
+    return this.http.get(url+`/decision/cached/${this.userEmail}`,{observe:'response'});
+  }
+
+  deleteCachedDecisions():Observable<HttpResponse<any>>{
+    this.store.select(selectUserData).pipe(
+          filter((userData)=>!!userData),
+          map((userData)=>userData!.email)
+        ).subscribe((email)=>{
+          this.userEmail=email;
+        });
+    return this.http.delete(url+`/decision/cached/${this.userEmail}`,{observe:'response'});
+  }
+
+
   getSearchedDecisions(search:string):Observable<HttpResponse<any>>{
     return this.http.get(url+'/decision/tagName/'+search,{observe:'response'});
     

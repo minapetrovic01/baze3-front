@@ -3,7 +3,7 @@ import { Actions, createEffect, ofType } from "@ngrx/effects";
 import { DecisionService } from "../decision/decision.service";
 import { AlternativeService } from "../alternative/alternative.service";
 import { CriteriaService } from "../criteria/criteria.service";
-import { createDecision, discardDraft, discardDraftSuccess, loadMyDecisions, loadMyDecisionsSuccess, loadSearchedDecisions, loadSearchedDecisionsSuccess, saveDraft, saveDraftSucess } from "./decisions.actions";
+import { createDecision, deleteCachedDecisions, deleteCachedDecisionsSuccess, discardDraft, discardDraftSuccess, loadCachedDecisions, loadCachedDecisionsSuccess, loadMyDecisions, loadMyDecisionsSuccess, loadSearchedDecisions, loadSearchedDecisionsSuccess, saveDraft, saveDraftSucess } from "./decisions.actions";
 import { EMPTY, exhaustMap, forkJoin, map, mergeMap, switchMap, tap } from "rxjs";
 import { Router } from "@angular/router";
 
@@ -18,20 +18,7 @@ export class DecisionsEffects {
         private readonly router: Router,
         ) { }
 
-//load cachedDecisions treba da se uradi
 
-    // loadMyDecisions$ = createEffect(() => {
-    //     return this.actions$.pipe(
-    //         ofType(loadMyDecisions),
-    //         exhaustMap((action) => {
-    //             return this.decisionService.getMyDecisions().pipe(
-    //                 map((myDecisions) => {console.log(myDecisions.body);
-    //                     return loadMyDecisionsSuccess({ myDecisions: myDecisions.body })})
-    //             );
-    //         })
-    //     )
-    // }
-    // );
     loadMyDecisions$ = createEffect(() => {
         return this.actions$.pipe(
             ofType(loadMyDecisions),
@@ -45,6 +32,34 @@ export class DecisionsEffects {
             })
         );
     });
+
+    loadCachedDecisions$ = createEffect(() => {
+        return this.actions$.pipe(
+            ofType(loadCachedDecisions),
+            exhaustMap((action) => {
+                return this.decisionService.getCachedDecisions().pipe(
+                    map((cachedDecisions) => {
+                        console.log(cachedDecisions.body);
+                        return loadCachedDecisionsSuccess({ cachedDecisions: cachedDecisions.body });
+                    })
+                );
+            })
+        );
+    });
+
+    deleteCachedDecisions$ = createEffect(() => {
+        return this.actions$.pipe(
+            ofType(deleteCachedDecisions),
+            switchMap((action) => {
+                return this.decisionService.deleteCachedDecisions().pipe(
+                    map((cachedDecisions) => {
+                        return deleteCachedDecisionsSuccess();
+                    })
+                );
+            })
+        );
+    });
+
 
     loadSearchedDecisions$ = createEffect(() => {
         return this.actions$.pipe(
