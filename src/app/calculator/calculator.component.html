@@ -128,7 +128,8 @@
         <div style="margin: 30px">
           <h2 style="text-align: center">Your decision is ready!</h2>
           <div>
-            <button mat-button color="basic" style="float: left; margin-bottom: 20px" type="button" matStepperPrevious>
+            <button mat-button color="basic" style="float: left; margin-bottom: 20px" type="button" matStepperPrevious
+            (click)="destroyCanvas()">
               Back
             </button>
             <button mat-raised-button color="primary" style="float: right; margin-bottom: 20px" type="submit"

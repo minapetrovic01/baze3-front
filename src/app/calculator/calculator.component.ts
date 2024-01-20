@@ -89,32 +89,32 @@ export class CalculatorComponent implements OnInit {
   }
 
   setParametersFromDraft(){
-    this.altcritFormGroup.value.name=this.draft?.name;
-    this.altcritFormGroup.value.description=this.draft?.description;
-    this.altcritFormGroup.value.alternativeNumber=this.draft?.alternatives.length;
-    this.altcritFormGroup.value.criteriaNumber=this.draft?.criterias.length;
-    this.decision = new DecisionDto(this.altcritFormGroup.value.name, this.altcritFormGroup.value.description);
 
-    this.alternativeNumber = this.altcritFormGroup.value.alternativeNumber;
-    this.criterionNumber = this.altcritFormGroup.value.criteriaNumber;
+    this.altcritFormGroup.patchValue({
+      name: this.draft?.name,
+      description: this.draft?.description,
+      alternativeNumber: this.draft?.alternatives.length,
+      criteriaNumber: this.draft?.criterias.length,
+      tag1: this.draft?.tags[0]?.name,
+      tag2: this.draft?.tags[1]?.name,
+      tag3: this.draft?.tags[2]?.name,
+    });
+    this.decision = new DecisionDto(this.altcritFormGroup.value.name, this.altcritFormGroup.value.description);
     this.resetAlternativesAndCriterias();
-    if(this.draft?.tags){
-      this.altcritFormGroup.value.tag1=this.draft.tags[0].name;
-      this.altcritFormGroup.value.tag2=this.draft.tags[1].name;
-      this.altcritFormGroup.value.tag3=this.draft.tags[2].name;
-    }
     
-    if(this.draft?.alternatives){
-      this.draft.alternatives.forEach(element => {
-        this.alternatives.push(new AlternativeDto(element.name, element.percentage));
-      });
-    }
-    if(this.draft?.criterias){
-      this.draft.criterias.forEach(element => {
-        this.criterias.push(new CriteriaDto(element.name, element.weight));
-      });
-    }
-    this.matrix = Array.from({ length: this.alternativeNumber }, () => Array.from({ length: this.criterionNumber }, () => 0));
+    // if(this.draft?.alternatives){
+    //   this.draft.alternatives.forEach(element => {
+    //     this.alternatives.push(new AlternativeDto(element.name, element.percentage));
+    //   });
+    // }
+    // if(this.draft?.criterias){
+    //   this.draft.criterias.forEach(element => {
+    //     this.criterias.push(new CriteriaDto(element.name, element.weight));
+    //   });
+    // }
+    this. alternativeNumber = this.altcritFormGroup.value.alternativeNumber;
+    this.criterionNumber = this.altcritFormGroup.value.criteriaNumber;
+   // this.matrix = Array.from({ length: this.alternativeNumber }, () => Array.from({ length: this.criterionNumber }, () => 0));
 
   }
 
@@ -123,11 +123,18 @@ export class CalculatorComponent implements OnInit {
     this.alternativeNumber = this.altcritFormGroup.value.alternativeNumber;
     this.criterionNumber = this.altcritFormGroup.value.criteriaNumber;
     this.resetAlternativesAndCriterias();
+
     for (let i = 0; i < this.alternativeNumber; i++) {
-      this.alternatives.push(new AlternativeDto("Alternative " + (i + 1), 0));
+      if(this.draft!==null&& this.draft.alternatives.length>i){
+        this.alternatives.push(new AlternativeDto(this.draft.alternatives[i].name, this.draft.alternatives[i].percentage));
+      }else
+        this.alternatives.push(new AlternativeDto("Alternative " + (i + 1), 0));
     }
     for (let i = 0; i < this.criterionNumber; i++) {
-      this.criterias.push(new CriteriaDto("Criteria " + (i + 1), 0));
+      if(this.draft!==null&& this.draft.criterias.length>i){
+        this.criterias.push(new CriteriaDto(this.draft.criterias[i].name, this.draft.criterias[i].weight));
+      }else
+        this.criterias.push(new CriteriaDto("Criteria " + (i + 1), 0));
     }
     this.tags.push(new TagDto(this.altcritFormGroup.value.tag1));
     this.tags.push(new TagDto(this.altcritFormGroup.value.tag2));
@@ -203,6 +210,10 @@ export class CalculatorComponent implements OnInit {
 
     let dft =new Decision(0,this.altcritFormGroup.value.name,this.altcritFormGroup.value.description,new Date(),alternatives1,criterias1,tags,this.owner!);
     this.store.dispatch(saveDraft({decision:dft}));
+  }
+
+  destroyCanvas(){
+    this.chart.destroy();
   }
 
 }
