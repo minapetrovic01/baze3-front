@@ -36,11 +36,11 @@ export const deleteCachedDecisions = createAction(
 );
 
 export const deleteCachedDecisionsSuccess = createAction(
-    '[Decisions] Deleted Cached Decisions'
+    '[Decisions] Deleted Cached Decisions Sucsess'
 );
 
 export const loadCachedDecisionsSuccess = createAction(
-    '[Decisions] Load Cached Decisions',
+    '[Decisions] Load Cached Decisions Success',
     props<{ cachedDecisions: Decision[] }>()
 );
 
