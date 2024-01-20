@@ -35,8 +35,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.store.select(selectUserData).subscribe((data) => {
       this.profileToDisplay = data;
-      console.log(this.profileToDisplay);
-      console.log("aaaaaaaaaaaaaaaaaaaa")
     });
     this.createProfilePicture();
   }

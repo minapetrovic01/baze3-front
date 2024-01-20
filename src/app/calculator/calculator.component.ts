@@ -75,7 +75,6 @@ export class CalculatorComponent implements OnInit {
     this.store.select(selectUnfinishedDecision).subscribe(decision => {
       if(decision!==null && decision!==undefined){
         this.draft=decision;
-        console.log(this.draft)
         if(this.draft!==null){
           this.setParametersFromDraft();
         }

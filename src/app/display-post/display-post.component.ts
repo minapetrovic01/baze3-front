@@ -4,6 +4,7 @@ import { Store } from '@ngrx/store';
 import { AuthState, UsersState } from '../store/user.reducer';
 import {  supportUser, unSupportUser } from '../store/user.actions';
 import { AppState } from '../app.state';
+import { deleteDecision, emptySearch } from '../store/decisions.actions';
 
 @Component({
   selector: 'app-display-post',
@@ -78,6 +79,14 @@ export class DisplayPostComponent implements OnInit {
       this.store.dispatch(supportUser({email:this.decision?.owner.email}));
     }
     this.supportNumber++;
+  }
+
+  deletePost(){
+
+    if(this.decision?.id){
+      this.store.dispatch(deleteDecision({id:this.decision.id}));
+      this.store.dispatch(emptySearch());
+    }
   }
 
 }

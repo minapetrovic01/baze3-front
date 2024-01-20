@@ -1,7 +1,7 @@
 import { EntityState, createEntityAdapter } from "@ngrx/entity"
 import { Decision } from "../entities/decision";
 import { createReducer, on } from "@ngrx/store";
-import { loadMyDecisions, loadMyDecisionsSuccess, loadSearchedDecisionsSuccess,loadCachedDecisionsSuccess, saveDraftSucess, discardDraft, discardDraftSuccess, deleteCachedDecisionsSuccess, loadDraftSuccess } from "./decisions.actions";
+import { loadMyDecisions, loadMyDecisionsSuccess, loadSearchedDecisionsSuccess,loadCachedDecisionsSuccess, saveDraftSucess, discardDraft, discardDraftSuccess, deleteCachedDecisionsSuccess, loadDraftSuccess, emptySearchedDecisionsSuccess, emptySearch } from "./decisions.actions";
 
 
 export interface DecisionsState extends EntityState<Decision> {
@@ -34,24 +34,18 @@ export const searchedDecisionsReducer=createReducer(
     on(loadSearchedDecisionsSuccess, (state, { searchedDecisions }) => {
         return adapterDecisions.setAll(searchedDecisions, state);
     }),
+    on(emptySearch, (state) => {
+        return adapterDecisions.removeAll(state);
+    }),
 );
 
 export const cachedDecisionsReducer=createReducer(
     initialCacheDecisionsState,
     on(loadCachedDecisionsSuccess, (state, { cachedDecisions }) => {
-        console.log(cachedDecisions);
-        console.log("ovde je u reduceru");
         return adapterCacheDecisions.setAll(cachedDecisions, state);
     }),
     on(deleteCachedDecisionsSuccess, (state) => {
         return adapterCacheDecisions.removeAll(state);
-    }),
-);
-
-export const emptySearchReducer=createReducer(
-    initialDecisionsState,
-    on(loadSearchedDecisionsSuccess, (state, { searchedDecisions }) => {
-        return adapterDecisions.removeAll(state);
     }),
 );
 

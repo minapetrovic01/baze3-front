@@ -75,12 +75,10 @@ export class UserEffects {
         return this.userService.signIn(action.email, action.password).pipe(
           mergeMap((response) => {
             if (response.status == 201) {
-              console.log(response)
               return this.userService.getUser(response.body.email).pipe(
                 map((user) => loginsuccess({ user: user.body })),
                 tap(() => {
                   this.router.navigateByUrl("/feed");
-                  console.log("ovde");
                 })
               );
             } else {

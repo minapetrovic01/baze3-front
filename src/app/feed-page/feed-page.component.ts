@@ -20,7 +20,6 @@ export class FeedPageComponent implements OnInit {
   ngOnInit(): void {
     this.store.select(selectSearchedDecisions).subscribe((searchedDecisions)=>{
       this.searchedDecisions=searchedDecisions;
-      console.log(this.searchedDecisions);
     });
   }
 

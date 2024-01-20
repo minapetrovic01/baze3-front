@@ -117,4 +117,8 @@ export class DecisionService {
     return this.http.delete(url+`/decision/unfinished/${this.userEmail}`,{observe:'response'});
   }
 
+  deleteDecision(id:number):Observable<HttpResponse<any>>{
+    return this.http.delete(url+`/decision/${id}`,{observe:'response'});
+  }
+
 }

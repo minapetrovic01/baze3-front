@@ -3,6 +3,9 @@
     <mat-card-title class="mat-card-title">{{decision?.name}}</mat-card-title>
     <mat-card-subtitle class="mat-card-subtitle">{{decision?.owner!.name+" "+decision?.owner?.surname+"
       ("+decision?.owner?.email+")"}}</mat-card-subtitle>
+       <button mat-button (click)="deletePost()" [disabled]="!isMine" style="float: right" *ngIf="isMine">
+        <mat-icon>delete</mat-icon>
+      </button>
   </mat-card-header>
   <mat-card-actions>
     <div *ngIf="!isMine">

@@ -74,6 +74,15 @@ export const loadDraftSuccess = createAction(
     props<{ decision: Decision}>()
 )
 
+export const deleteDecision = createAction(
+    '[Decisions] Delete Decisions',
+    props<{ id: number}>()
+);
+
+export const deleteDecisionSuccess = createAction(
+    '[Decisions] Deleted Decisions Sucsess'
+);
+
 
 
 
@@ -85,4 +94,8 @@ export const createDecisionPartial = createAction(
 
 export const emptySearch = createAction(
     '[Decisions] Empty Search'
+);
+
+export const emptySearchedDecisionsSuccess = createAction(
+    '[Decisions] Empty Search Decisions Success'
 );
